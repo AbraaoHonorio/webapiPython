@@ -1,66 +1,72 @@
-from flask import Flask
-from flask_restful import reqparse, abort, Api, Resource
-
+from flask import Flask, jsonify, request,abort
+from bs4 import BeautifulSoup
+from urllib.request import urlopen, Request
+import os   
 
 app = Flask(__name__)
-api = Api(app)
 
-TODOS = {
-    
-}
+tasks = [
+    {
+        'id': 1,
+        'title': u'Buy groceries',
+        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol', 
+        'done': False
+    },
+    {
+        'id': 2,
+        'title': u'Learn Python',
+        'description': u'Need to find a good Python tutorial on the web', 
+        'done': False
+    }
+]
 
-def abort_if_todo_doesnt_exist(todo_id):
-    if todo_id not in TODOS:
-        abort(404, message="Todo {} doesn't exist".format(todo_id))
+@app.route('/todo/api/v1.0/tasks', methods=['POST'])
+def create_task():
+    if not request.json or not 'title' in request.json:
+        abort(400)
+    task = {
+        'id': tasks[-1]['id'] + 1,
+        'title': request.json['title'],
+        'description': request.json.get('description', ""),
+        'done': False
+    }
+    tasks.append(task)
+    return jsonify({'task': task}), 201
 
-parser = reqparse.RequestParser()
-parser.add_argument('Código de barra')
-parser.add_argument('Nome')
-parser.add_argument('Preço')
-parser.add_argument('Ativo')
-parser.add_argument('Categoria'),
-parser.add_argument('Vencimento')
+@app.route('/api/v1/stock', methods=['GET'])
+def filmes():
+    html_doc = urlopen("http://globoesporte.globo.com/futebol/selecao-brasileira/").read()
+    soup = BeautifulSoup(html_doc, "html.parser")
+    a = ['Feijão', 'Arroz', 'Sabão', 'Carne', 'Biscoito']
+    b = [5.00, 3.50 , 2.55, 20.50, 1.7]
+    c = ['Alimentos', 'Alimentos', 'Limpeza', 'Carnes', 'Padaria']
+    at = [1,0,0,0,1]
+    l = list(range(10000000,10000005))
+    data = []
+    for i in range(5):
+       
+       data.append({'Código de barra' : l[i],
+                    'Nome:': a[i],
+                    'Preço:' : b[i],
+                    'Ativo:' : at[i],
+                    'Categoria' : c[i],
+                    'Vencimento' :  "07/11/2017"})
+                         #'Categoria' : c[i]})
+                        #'data' :  dataObj.text[1:23].strip().replace('/',' ')})
+                
+    return jsonify({'Estoque': data})
 
 
+@app.route('/todo/api/v1.0/tasks', methods=['GET'])
+def get_tasks():
+    return jsonify({'tasks': tasks})
 
-
-# Todo
-# shows a single todo item and lets you delete a todo item
-class Todo(Resource):
-    def get(self, todo_id):
-        abort_if_todo_doesnt_exist(todo_id)
-        return TODOS[todo_id]
-
-    def delete(self, todo_id):
-        abort_if_todo_doesnt_exist(todo_id)
-        del TODOS[todo_id]
-        return '', 204
-
-    def put(self, todo_id):
-        args = parser.parse_args()
-        task = {'task': args['task']}
-        TODOS[todo_id] = task
-        return task, 201
-
-
-# TodoList
-# shows a list of all todos, and lets you POST to add new tasks
-class TodoList(Resource):
-    def get(self):
-        return TODOS
-
-    def post(self):
-        args = parser.parse_args()
-        id =   (len(TODOS) +1) #int(max(TODOS.keys()).lstrip('alimento')) 
-        todo_id = 'alimento%i' % id
-        TODOS[todo_id] = {'id': id,'Código de barra': args['Código de barra'],'Nome': args['Nome'],'Preço': args['Preço'],'Ativo': args['Ativo'],'Categoria': args['Categoria'],'Vencimento': args['Vencimento']}
-        return TODOS[todo_id], 201
-
-##
-## Actually setup the Api resource routing here
-##
-api.add_resource(TodoList, '/api/todos')
-api.add_resource(Todo, '/api//todos/<todo_id>')
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
+def get_task(task_id):
+    task = [task for task in tasks if task['id'] == task_id]
+    if len(task) == 0:
+        abort(404)
+    return jsonify({'task': task[0]})
 
 
 if __name__ == '__main__':
