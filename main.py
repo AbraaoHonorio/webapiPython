@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_restful import reqparse, abort, Api, Resource
-
+from urllib.request import urlopen, Request
+import os   
 
 app = Flask(__name__)
 api = Api(app)
@@ -61,7 +62,6 @@ class TodoList(Resource):
 ##
 api.add_resource(TodoList, '/api/todos')
 api.add_resource(Todo, '/api//todos/<todo_id>')
-
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
