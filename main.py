@@ -55,7 +55,7 @@ class TodoList(Resource):
         id =   (len(TODOS) +1) #int(max(TODOS.keys()).lstrip('alimento')) 
         #todo_id = 'alimento%i' % id
         TODOS[id] = {'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']}
-        return TODOS[id], 201
+        return jsonify({'alimentos': TODOS})
 
 ##
 ## Actually setup the Api resource routing here
