@@ -6,9 +6,7 @@ import os
 app = Flask(__name__)
 api = Api(app)
 
-TODOS = {
-    
-}
+TODOS = []
 
 def abort_if_todo_doesnt_exist(todo_id):
     if todo_id not in TODOS:
