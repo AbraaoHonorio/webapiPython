@@ -53,9 +53,9 @@ class TodoList(Resource):
     def post(self):
         args = parser.parse_args()
         id =   (len(TODOS) +1) #int(max(TODOS.keys()).lstrip('alimento')) 
-        todo_id = 'alimento%i' % id
-        TODOS[todo_id] = {'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']}
-        return TODOS[todo_id], 201
+        #todo_id = 'alimento%i' % id
+        TODOS[id] = {'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']}
+        return TODOS[id], 201
 
 ##
 ## Actually setup the Api resource routing here
