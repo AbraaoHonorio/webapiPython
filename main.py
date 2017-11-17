@@ -54,7 +54,7 @@ class TodoList(Resource):
         args = parser.parse_args()
         id =   (len(TODOS) +1) #int(max(TODOS.keys()).lstrip('alimento')) 
         #todo_id = 'alimento%i' % id
-        TODOS[id] = {'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']}
+        TODOS..append({'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']}
         return jsonify({'alimentos': TODOS})
 
 ##
