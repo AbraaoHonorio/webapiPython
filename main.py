@@ -15,12 +15,12 @@ def abort_if_todo_doesnt_exist(todo_id):
         abort(404, message="Todo {} doesn't exist".format(todo_id))
 
 parser = reqparse.RequestParser()
-parser.add_argument('Código de barra')
-parser.add_argument('Nome')
-parser.add_argument('Preço')
-parser.add_argument('Ativo')
-parser.add_argument('Categoria'),
-parser.add_argument('Vencimento')
+parser.add_argument('barcode')
+parser.add_argument('name')
+parser.add_argument('price')
+parser.add_argument('active')
+parser.add_argument('category_id'),
+parser.add_argument('duedate')
 
 
 
@@ -54,7 +54,7 @@ class TodoList(Resource):
         args = parser.parse_args()
         id =   (len(TODOS) +1) #int(max(TODOS.keys()).lstrip('alimento')) 
         todo_id = 'alimento%i' % id
-        TODOS[todo_id] = {'id': id,'Código de barra': args['Código de barra'],'Nome': args['Nome'],'Preço': args['Preço'],'Ativo': args['Ativo'],'Categoria': args['Categoria'],'Vencimento': args['Vencimento']}
+        TODOS[todo_id] = {'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']}
         return TODOS[todo_id], 201
 
 ##
