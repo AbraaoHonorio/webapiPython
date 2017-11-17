@@ -26,16 +26,17 @@ parser.add_argument('duedate')
 # Todo
 # shows a single todo item and lets you delete a todo item
 class Todo(Resource):
-    def get(self, todo_id):
-        abort_if_todo_doesnt_exist(todo_id)
-        return TODOS[todo_id]
+    def get(self, id ):
+        abort_if_todo_doesnt_exist(id)
+        return jsonify({'alimentos': todos})
 
-    def delete(self, todo_id):
-        abort_if_todo_doesnt_exist(todo_id)
+
+    def delete(self, id ):
+        abort_if_todo_doesnt_exist(id)
         del TODOS[todo_id]
         return '', 204
 
-    def put(self, todo_id):
+    def put(self, id):
         args = parser.parse_args()
         task = {'task': args['task']}
         TODOS[todo_id] = task
@@ -46,14 +47,18 @@ class Todo(Resource):
 # shows a list of all todos, and lets you POST to add new tasks
 class TodoList(Resource):
     def get(self):
-        return TODOS
+            return jsonify({'alimentos': TODOS})
+
 
     def post(self):
+       
         args = parser.parse_args()
         id =   (len(TODOS) +1) #int(max(TODOS.keys()).lstrip('alimento')) 
-        #todo_id = 'alimento%i' % id
-        TODOS..append({'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']}
-        return jsonify({'alimentos': TODOS})
+        todo_id = 'alimento%i' % id
+        TODOS.append({ 'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']})
+        return TODOS[id-1], 201
+
+
 
 ##
 ## Actually setup the Api resource routing here
