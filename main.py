@@ -64,7 +64,7 @@ class TodoList(Resource):
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(TodoList, '/api/todos')
-api.add_resource(Todo, '/todos/<int:id>')
+api.add_resource(Todo, '/api/todos/<int:id>')
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
