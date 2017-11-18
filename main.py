@@ -8,9 +8,9 @@ api = Api(app)
 
 TODOS = []
 
-def abort_if_todo_doesnt_exist(todo_id):
-    if todo_id not in TODOS:
-        abort(404, message="Todo {} doesn't exist".format(todo_id))
+def abort_if_todo_doesnt_exist(id):
+    if id not in TODOS:
+        abort(404, message="Todo {} doesn't exist".format(id))
 
 parser = reqparse.RequestParser()
 parser.add_argument('barcode')
@@ -27,19 +27,19 @@ parser.add_argument('duedate')
 # shows a single todo item and lets you delete a todo item
 class Todo(Resource):
     def get(self, id ):
-        abort_if_todo_doesnt_exist(id)
-        return jsonify({'alimentos': todos})
+       
+        return jsonify({'alimentos': TODOS[id]})
 
 
     def delete(self, id ):
         abort_if_todo_doesnt_exist(id)
-        del TODOS[todo_id]
+        del TODOS[id]
         return '', 204
 
     def put(self, id):
         args = parser.parse_args()
         task = {'task': args['task']}
-        TODOS[todo_id] = task
+        TODOS[id] = task
         return task, 201
 
 
@@ -53,7 +53,7 @@ class TodoList(Resource):
     def post(self):
        
         args = parser.parse_args()
-        id =   (len(TODOS) +1) #int(max(TODOS.keys()).lstrip('alimento')) 
+        id =   (len(TODOS) +1) 
         todo_id = 'alimento%i' % id
         TODOS.append({ 'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']})
         return TODOS[id-1], 201
@@ -64,7 +64,7 @@ class TodoList(Resource):
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(TodoList, '/api/todos')
-api.add_resource(Todo, '/api//todos/<todo_id>')
+api.add_resource(Todo, '/todos/<int:id>')
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
