@@ -35,7 +35,7 @@ class Todo(Resource):
          for person in TODOS:
             if person['barcode'] == id:
                TODOS.pop(person['id'])
-                return jsonify({'alimentos': person})
+               return jsonify({'alimentos': person})
 
 
     def put(self, id):
