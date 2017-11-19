@@ -27,18 +27,19 @@ parser.add_argument('duedate')
 # shows a single todo item and lets you delete a todo item
 class Todo(Resource):
     def get(self, id ):
-       
         return jsonify({'alimentos': TODOS[id]})
 
 
     def delete(self, id ):
-        abort_if_todo_doesnt_exist(id)
-        del TODOS[id]
-        return '', 204
+        #abort_if_todo_doesnt_exist(id)
+        element = TODOS[id]
+        TODOS[id:id+1] = []
+        return jsonify({'alimentos': element})
+
 
     def put(self, id):
         args = parser.parse_args()
-        task = {'task': args['task']}
+        task = { 'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']}
         TODOS[id] = task
         return task, 201
 
@@ -53,10 +54,10 @@ class TodoList(Resource):
     def post(self):
        
         args = parser.parse_args()
-        id =   (len(TODOS) +1) 
+        id =   len(TODOS)
         todo_id = 'alimento%i' % id
         TODOS.append({ 'id': id,'barcode': args['barcode'],'name': args['name'],'price': args['price'],'active': args['active'],'category_id': args['category_id'],'duedate': args['duedate']})
-        return TODOS[id-1], 201
+        return TODOS[id], 201
 
 
 
@@ -67,7 +68,4 @@ api.add_resource(TodoList, '/api/todos')
 api.add_resource(Todo, '/api/todos/<int:id>')
 
 if __name__ == '__main__':
-    # Bind to PORT if defined, otherwise default to 5000.
-    port = int(os.environ.get('PORT', 5000))
-    # Tem que ser 0.0.0.0 para rodar no Heroku
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
