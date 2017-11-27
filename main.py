@@ -31,7 +31,7 @@ class Todo(Resource):
 
 
     def delete(self, id ):
-        ######abort_if_todo_doesnt_exist(id)
+        #abort_if_todo_doesnt_exist(id)
          for person in TODOS:
             if person['barcode'] == id:
                TODOS.pop(person['id'])
